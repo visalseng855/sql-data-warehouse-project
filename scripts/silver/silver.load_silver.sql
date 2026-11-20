@@ -162,15 +162,18 @@ DECLARE @start_date DATETIME, @end_date DATETIME, @batch_start_time AS DATETIME,
 		)
 
 		SELECT
-		CASE 
-			WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid,4,LEN(cid))
-			ELSE cid
-		END cid,
-		bdate,
-		CASE
-			WHEN UPPER(TRIM(gen)) IN ('F', 'FEMALE') THEN 'Female'
-			WHEN UPPER(TRIM(gen)) IN ('M', 'MALE') THEN 'Male'
-			ELSE NULL
+			CASE 
+				WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid,4,LEN(cid))
+				ELSE cid
+			END cid,
+			CASE 
+				WHEN bdate > GETDATE() THEN NULL
+				ELSE bdate
+		END AS bdate,
+			CASE
+				WHEN UPPER(TRIM(gen)) IN ('F', 'FEMALE') THEN 'Female'
+				WHEN UPPER(TRIM(gen)) IN ('M', 'MALE') THEN 'Male'
+				ELSE NULL
 		END gen
 		FROM bronze.erp_cust_az12
 
